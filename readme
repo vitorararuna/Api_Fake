@@ -1,0 +1,6 @@
+yarn add react-router-dom
+yarn add styled-components
+yarn add react-icons
+yarn add polished => lida com cor
+yarn global add json-server => criar api fake para desenvolvimento
+yarn add axios => p conssumir esta api -> para rodar o servidor: "json-server server.json -p 3333"
