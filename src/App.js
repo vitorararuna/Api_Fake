@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import Routes from './routes';
-// import { Provider } from 'react-redux'
+import { Provider } from 'react-redux' // o Provaider vai deixar disponível o nosso store da aplicação disponível para todos os componentes
 // import { ToastContainer } from 'react-toastify'
 
 // import './config/Reactotron'
@@ -11,17 +11,20 @@ import GlobalStyles from './styles/global'
 import Header from './components/Header'
 
 // import history from './services/history'
-// import Store from './store'
+import store from './store'
 
 
 function App() {
   return (
-    <BrowserRouter>
-      <Header />
-      <Routes />
 
-      <GlobalStyles />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Header />
+        <Routes />
+
+        <GlobalStyles />
+      </BrowserRouter>
+    </Provider>
   );
 }
 
