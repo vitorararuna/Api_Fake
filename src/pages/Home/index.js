@@ -42,6 +42,7 @@ class Home extends Component {
   render() {
 
     const { products } = this.state;
+    const { amount } = this.props;
 
 
     return (
@@ -56,8 +57,8 @@ class Home extends Component {
               onClick={() => this.handleAddProduct(product)}
             >
               <div>
-                <MdAddShoppingCart size={16} color="#FFF" /> 3
-            </div>
+                <MdAddShoppingCart size={16} color="#FFF" /> {amount[product.id] || 0}
+              </div>
               <span>ADICIONAR AO CARRINHO</span>
             </button>
           </li>
@@ -74,6 +75,14 @@ class Home extends Component {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(CartActions, dispatch);
 
-export default connect(null, mapDispatchToProps)(Home);
+
+const mapStateToProps = state => ({
+  amount: state.cart.reduce((amount, product) => {
+    amount[product.id] = product.amount;
+    return amount;
+  }, {}), //estou criando um objeto, cuja cada uma das chaves do objeto é o id do produto e seu valor o amount
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
 //Como o connect da home não tem o mapStateToProps ainda, ele tem só o mapDispatchToProps, o 1° elm eu passo null (que seria o mapStateToProps, que já vamos adicionar)
 //e o segundo , eu passo o nosso mapDispatchToProps => agora posso acessar as ações do carrinho direto, tipo "addToCart(product);"

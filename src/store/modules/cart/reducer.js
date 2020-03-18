@@ -25,12 +25,26 @@ export default function cart(state = [], action) { //cart aqui é o state que es
     case '@cart/REMOVE':
       return produce(state, draft => {
         const productIndex = draft.findIndex(p => p.id === action.id); //procurando por um produto em que o id seja igual a esse que estamos recebendo de dentro da nossa action e resgatando seu index de dentro do array
-        
-        if(productIndex >= 0){
+
+        if (productIndex >= 0) {
           draft.splice(productIndex, 1); //passo o index que quero remover e a qtd de itens a ser removido a partir desse index
         }
       });
 
+    case '@cart/UPDATE_AMOUNT': {
+
+      if(action.amount <= 0){
+        return state; //ou seja, não vai mudar nada no meu estado
+      }
+
+      return produce(state, draft => {
+        const productIndex = draft.findIndex(p => p.id === action.id);
+
+        if (productIndex >= 0) {
+          draft[productIndex].amount = Number(action.amount);
+        }
+      });
+    }
 
     default:
       return state;
