@@ -6,7 +6,7 @@ export default function cart(state = [], action) { //cart aqui é o state que es
   //Como o dispatch dispara todos os reducers, acrescentei esse Switch Case => Garante que esse reducer de cart só ouça a action 'ADD_TO_CART'  
   switch (action.type) {
 
-    case '@cart/ADD':                                             /* action = dispatch que se encontra no botão que foi chamado [action.type & action.product] */  /* Retorna todo o state atual que é um vetor e adicionar o action */
+    case '@cart/ADD_SUCCESS':                                             /* action = dispatch que se encontra no botão que foi chamado [action.type & action.product] */  /* Retorna todo o state atual que é um vetor e adicionar o action */
       return produce(state, draft => {                             //draft é a cópia do state
 
         const productIndex = draft.findIndex(p => p.id === action.product.id); //procurando por um produto em que o id seja igual a esse que estamos recebendo de dentro da nossa action e resgatando seu index de dentro do array

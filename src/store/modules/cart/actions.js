@@ -1,6 +1,15 @@
-export function addToCart(product) {
+
+//Quando o usuário clica em adicionar ao carrinho, ele vai disparar essa função -> que chama nosso saga "addToCart" -> que chama nossa action "addToCartSuccess"
+export function addToCartRequest(id) {
   return {
-    type: '@cart/ADD',
+    type: '@cart/ADD_REQUEST',
+    id,
+  };
+}
+
+export function addToCartSuccess(product) {
+  return {
+    type: '@cart/ADD_SUCCESS',
     product,
   };
 }
