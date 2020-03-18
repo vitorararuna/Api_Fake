@@ -5,3 +5,5 @@ yarn add polished => lida com cor
 yarn global add json-server => criar api fake para desenvolvimento
 yarn add axios => p conssumir esta api -> para rodar o servidor: "json-server server.json -p 3333"
 yarn add redux react-redux
+yarn add reactotron-react-js reactotron-redux -> reactotron é uma aplicação para debug 
+yarn add immer => facilita lidar com objetos e arrays que são imutáveis dentro do react

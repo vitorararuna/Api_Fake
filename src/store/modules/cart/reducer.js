@@ -1,9 +1,37 @@
+import produce from 'immer';
+
+
 export default function cart(state = [], action) { //cart aqui é o state que estamos trabalhando
 
   //Como o dispatch dispara todos os reducers, acrescentei esse Switch Case => Garante que esse reducer de cart só ouça a action 'ADD_TO_CART'  
   switch (action.type) {
-    case 'ADD_TO_CART':
-      return [...state, action.product];  /* action = dispatch que se encontra no botão que foi chamado [action.type & action.product] */  /* Retorna todo o state atual que é um vetor e adicionar o action */
+
+    case '@cart/ADD':                                             /* action = dispatch que se encontra no botão que foi chamado [action.type & action.product] */  /* Retorna todo o state atual que é um vetor e adicionar o action */
+      return produce(state, draft => {                             //draft é a cópia do state
+
+        const productIndex = draft.findIndex(p => p.id === action.product.id); //procurando por um produto em que o id seja igual a esse que estamos recebendo de dentro da nossa action e resgatando seu index de dentro do array
+
+        if (productIndex >= 0) {  //se existir um com o mesmo id já:
+          draft[productIndex].amount += 1;
+        } else {
+          draft.push({
+            ...action.product,
+            amount: 1,
+          });
+        }
+      });
+
+
+    case '@cart/REMOVE':
+      return produce(state, draft => {
+        const productIndex = draft.findIndex(p => p.id === action.id); //procurando por um produto em que o id seja igual a esse que estamos recebendo de dentro da nossa action e resgatando seu index de dentro do array
+        
+        if(productIndex >= 0){
+          draft.splice(productIndex, 1); //passo o index que quero remover e a qtd de itens a ser removido a partir desse index
+        }
+      });
+
+
     default:
       return state;
   }
