@@ -7,6 +7,8 @@ yarn add axios => p conssumir esta api -> para rodar o servidor: "json-server se
 yarn add redux react-redux
 yarn add reactotron-react-js reactotron-redux -> reactotron é uma aplicação para debug 
 yarn add immer => facilita lidar com objetos e arrays que são imutáveis dentro do react
+yarn add react-toastify => lidar com mensagens/avisos para o usuário
+yarn add history => ajuda nas rotas
 
 -----------------------------------------------------------------------------------------------------------
 

@@ -8,17 +8,10 @@ export default function cart(state = [], action) { //cart aqui é o state que es
 
     case '@cart/ADD_SUCCESS':                                             /* action = dispatch que se encontra no botão que foi chamado [action.type & action.product] */  /* Retorna todo o state atual que é um vetor e adicionar o action */
       return produce(state, draft => {                             //draft é a cópia do state
+        const {product} = action;
 
-        const productIndex = draft.findIndex(p => p.id === action.product.id); //procurando por um produto em que o id seja igual a esse que estamos recebendo de dentro da nossa action e resgatando seu index de dentro do array
-
-        if (productIndex >= 0) {  //se existir um com o mesmo id já:
-          draft[productIndex].amount += 1;
-        } else {
-          draft.push({
-            ...action.product,
-            amount: 1,
-          });
-        }
+        draft.push(product); //OBS.: AUMENTAR/DIMINUIR ESTOQUE AGORA É O SAGA QUE FAZ
+        
       });
 
 
@@ -31,11 +24,7 @@ export default function cart(state = [], action) { //cart aqui é o state que es
         }
       });
 
-    case '@cart/UPDATE_AMOUNT': {
-
-      if(action.amount <= 0){
-        return state; //ou seja, não vai mudar nada no meu estado
-      }
+    case '@cart/UPDATE_AMOUNT_SUCCESS': {
 
       return produce(state, draft => {
         const productIndex = draft.findIndex(p => p.id === action.id);
