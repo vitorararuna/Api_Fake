@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux'; //Conecta o nosso componente com o estado do redux
 import { bindActionCreators } from 'redux';
 
@@ -11,62 +11,61 @@ import api from '../../services/api';
 import * as CartActions from '../../store/modules/cart/actions';
 
 
-class Home extends Component {
+function Home({ amount, addToCartRequest }) {
 
-  state = {
-    products: [],
-  };
+  const [products, setProducts] = useState([]);
 
 
-  async componentDidMount() {
-    const response = await api.get('products');
+  useEffect(() => {
 
-    const data = response.data.map(product => ({
-      ...product,
-      priceFormatted: formatPrice(product.price),
-    }));
+    async function loadProducts() {
+      const response = await api.get('products');
 
-    this.setState({ products: data });
+      const data = response.data.map(product => ({
+        ...product,
+        priceFormatted: formatPrice(product.price),
+      }));
 
-  }
+      setProducts(data);
+    }
+
+    loadProducts();
+
+  }, []);
+
+
 
   //Sempre que for fazer uma alteração no estado. precisamos disparar um action (objeto que contém o type e o restante do conteúdo que a gente quiser) -> onclick()
-  handleAddProduct = id => {
+  function handleAddProduct(id) {
     //todo componente que a gente conecta com o redux (Home no caso), recebe uma propriedade que se chama dispatch => dispara uma action ao redux
     //Obs.: quando a gente dispara o dispatch, todos os reducers são ativados
-    const { addToCartRequest } = this.props;
-
     addToCartRequest(id);
   };
 
-  render() {
-
-    const { products } = this.state;
-    const { amount } = this.props;
+  /* OBS.: Não utilizamos o useCallback nessa function acima, pois ela não depende de outra informação, apenas do ID que recebe */
 
 
-    return (
-      <ProductList>
-        {products.map(product => (
-          <li key={product.id}>
-            <img src={product.image} alt={product.title} />
-            <strong>{product.title}</strong>
-            <span>{product.priceFormatted}</span>
-            <button
-              type="button"
-              onClick={() => this.handleAddProduct(product.id)}
-            >
-              <div>
-                <MdAddShoppingCart size={16} color="#FFF" /> {amount[product.id] || 0}
-              </div>
-              <span>ADICIONAR AO CARRINHO</span>
-            </button>
-          </li>
+  return (
+    <ProductList>
+      {products.map(product => (
+        <li key={product.id}>
+          <img src={product.image} alt={product.title} />
+          <strong>{product.title}</strong>
+          <span>{product.priceFormatted}</span>
+          <button
+            type="button"
+            onClick={() => handleAddProduct(product.id)}
+          >
+            <div>
+              <MdAddShoppingCart size={16} color="#FFF" /> {amount[product.id] || 0}
+            </div>
+            <span>ADICIONAR AO CARRINHO</span>
+          </button>
+        </li>
 
-        ))}
-      </ProductList >
-    )
-  }
+      ))}
+    </ProductList >
+  )
 }
 
 
