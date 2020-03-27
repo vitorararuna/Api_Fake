@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux'; //Conecta o nosso componente com o estado do redux
-import { bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux'; //Conecta o nosso componente com o estado do redux
 
 import { ProductList } from './styles';
 import { MdAddShoppingCart } from 'react-icons/md';
@@ -11,7 +10,16 @@ import api from '../../services/api';
 import * as CartActions from '../../store/modules/cart/actions';
 
 
-function Home({ amount, addToCartRequest }) {
+export default function Home() {
+
+  const amount = useSelector(state =>
+    state.cart.reduce((sumAmount, product) => {
+      sumAmount[product.id] = product.amount;
+      return sumAmount;
+    }, {}));
+
+  const dispatch = useDispatch();
+
 
   const [products, setProducts] = useState([]);
 
@@ -39,7 +47,7 @@ function Home({ amount, addToCartRequest }) {
   function handleAddProduct(id) {
     //todo componente que a gente conecta com o redux (Home no caso), recebe uma propriedade que se chama dispatch => dispara uma action ao redux
     //Obs.: quando a gente dispara o dispatch, todos os reducers são ativados
-    addToCartRequest(id);
+    dispatch(CartActions.saddToCartRequest(id));
   };
 
   /* OBS.: Não utilizamos o useCallback nessa function acima, pois ela não depende de outra informação, apenas do ID que recebe */
@@ -71,17 +79,20 @@ function Home({ amount, addToCartRequest }) {
 
 //Antes tinhamos a mapStateToProps, onde ela converte pedaços do nosso estado (reducers da nossa app) em propriedades aqui dentro do nosso componente.
 //Já o mapDispatchToProps, converte actions do redux em propriedades do nosso componente 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(CartActions, dispatch);
 
 
-const mapStateToProps = state => ({
-  amount: state.cart.reduce((amount, product) => {
-    amount[product.id] = product.amount;
-    return amount;
-  }, {}), //estou criando um objeto, cuja cada uma das chaves do objeto é o id do produto e seu valor o amount
-});
+    // const mapDispatchToProps = dispatch =>
+    // bindActionCreators(CartActions, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+
+    // const mapStateToProps = state => ({
+    //   amount: state.cart.reduce((amount, product) => {
+    //     amount[product.id] = product.amount;
+    //     return amount;
+    //   }, {}), //estou criando um objeto, cuja cada uma das chaves do objeto é o id do produto e seu valor o amount
+    // });
+
+    // export default connect(null, mapDispatchToProps)(Home);
+
 //Como o connect da home não tem o mapStateToProps ainda, ele tem só o mapDispatchToProps, o 1° elm eu passo null (que seria o mapStateToProps, que já vamos adicionar)
 //e o segundo , eu passo o nosso mapDispatchToProps => agora posso acessar as ações do carrinho direto, tipo "addToCart(product);"
